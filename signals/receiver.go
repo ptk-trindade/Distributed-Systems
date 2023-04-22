@@ -24,7 +24,7 @@ func Receive(args []string) {
     
     sigCh := make(chan os.Signal, 1) // synchronous channel
 
-    signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGPWR, nil)
+    signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGPWR)
     
     switch mode {
     case "busy":
@@ -43,12 +43,24 @@ func ReceiveBlocking(sigCh chan os.Signal) {
     fmt.Println("Blocking...")
     
     var signalReceived os.Signal
-    for signalReceived != syscall.SIGINT { // signal 2 (0x2) - Interrupt from keyboard (Ctrl+C)
+    for signalReceived != syscall.SIGINT {
         signalReceived = <-sigCh
-        fmt.Println("Received signal:", signalReceived)
+
+        if signalReceived == syscall.SIGINT { // signal 2 (0x2) - Interrupt from keyboard (Ctrl+C)
+            fmt.Println("Received SIGINT")
+
+        } else if signalReceived == syscall.SIGTERM { // signal 15 (0xf) - Termination signal
+            fmt.Println("Received SIGTERM")
+
+        } else if signalReceived == syscall.SIGPWR { // signal 30 (0x1e) - System is shutting down
+            fmt.Println("Received SIGPWR")
+            
+        } else {
+            fmt.Println("Received unknown signal:", signalReceived)
+            
+        }
     }
 
-    fmt.Println("--- Blocking end ---")
     return
 }
 
@@ -68,6 +80,9 @@ func ReceiveBusyWait(sigCh chan os.Signal) {
 
                 } else if signalReceived == syscall.SIGPWR { // signal 30 (0x1e) - System is shutting down
                     fmt.Println("Received SIGPWR")
+                    
+                } else {
+                    fmt.Println("Received unknown signal:", signalReceived)
 
                 }
 
@@ -78,6 +93,5 @@ func ReceiveBusyWait(sigCh chan os.Signal) {
         
     }
 
-    fmt.Println("--- Busy wait end ---")
     return
 }

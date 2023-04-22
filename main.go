@@ -28,6 +28,5 @@ func main() {
 		fmt.Println("Invalid parameter, program must be 'signals', 'pipes' or 'sockets'")
 	}
 
-    fmt.Println("--- main end ---")
     return
 }

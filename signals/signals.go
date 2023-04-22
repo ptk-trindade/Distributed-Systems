@@ -27,7 +27,6 @@ func Signal(args []string) {
         fmt.Println("Error: Invalid parameter, action must be 'send' or 'receive'")
     }
 
-    fmt.Println("--- Signal end ---")
     return
 }
 
