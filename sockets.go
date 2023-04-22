@@ -137,17 +137,11 @@ func handleConnection(conn net.Conn, closeServer chan bool) {
 	defer fmt.Println("Closing connection...")
 	
 	for {
-		byteSlice := make([]byte, 8)
-		_, err := conn.Read(byteSlice) // first return value is bytesRead (will be 8)
+		valReceived, err := readFromClient(conn)
 		if err != nil {
-			fmt.Println("Error reading from connection:", err)
-			return
+			fmt.Println("Error reading from client:", err)
+			continue
 		}
-
-		var valReceived int64
-		bufReader := bytes.NewReader(byteSlice)
-		binary.Read(bufReader, binary.BigEndian, &valReceived) // buf[:bytesRead] (bytesRead is 8)
-		fmt.Printf("Received value: %d\n", valReceived) // TEMP
 		
 		if valReceived <= int64(0) { // close connection
 			if valReceived == int64(-1) { // close server
@@ -165,9 +159,40 @@ func handleConnection(conn net.Conn, closeServer chan bool) {
 			response = "Is not prime"
 		}
 
-		var buf bytes.Buffer
-		buf.WriteString(response)
-		conn.Write(buf.Bytes())
+		err = sendToClient(conn, response)
+		if err != nil {
+			fmt.Println("Error sending to client:", err)
+			continue
+		}
 	}
 
+}
+
+
+func readFromClient(conn net.Conn) (int64, error) {
+	byteSlice := make([]byte, 8)
+	_, err := conn.Read(byteSlice) // first return value is qty of bytesRead (will be 8)
+	if err != nil {
+		return 0, err
+	}
+
+	var valReceived int64
+	buf := bytes.NewReader(byteSlice)
+	binary.Read(buf, binary.BigEndian, &valReceived) // bufReader[:bytesRead] (bytesRead is 8)
+	fmt.Printf("Received value: %d\n", valReceived) // TEMP
+
+	return valReceived, nil
+}
+
+
+func sendToClient(conn net.Conn, response string) error {
+	if len(response) != 12 {
+		return fmt.Errorf("Error: text must be 12 characters long")
+	}
+
+	var buf bytes.Buffer
+	buf.WriteString(response)
+	_, err := conn.Write(buf.Bytes())
+
+	return err
 }
