@@ -5,6 +5,7 @@ import (
     "os"
 	"os/signal"
     "syscall"
+    "time"
 )
 
 /*
@@ -71,6 +72,7 @@ func ReceiveBusyWait(sigCh chan os.Signal) {
                 }
 
             default:
+                time.Sleep(1 * time.Second)
                 fmt.Print(".") // no signal received
         }
         
