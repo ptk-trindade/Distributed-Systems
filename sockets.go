@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"encoding/binary"
 	"bytes"
+	utils "github.com/ptk-trindade/Distributed-Systems/utils"
 )
 
 
@@ -54,7 +55,7 @@ func socketsClient(args []string) {
     defer conn.Close()
 	
 	
-	current_n := int64(utilsRandInt(100) + 1)
+	current_n := int64(utils.RandInt(100) + 1)
 	for i:=0; i < qty; i++ {
 		fmt.Println("Value sent:", current_n)
 		err := sendToServer(conn, current_n)
@@ -64,7 +65,7 @@ func socketsClient(args []string) {
 		}
 		
 
-		current_n += int64(utilsRandInt(100) + 1)
+		current_n += int64(utils.RandInt(100) + 1)
 
         // read the response from the server
         responseStr, err := readFromServer(conn)

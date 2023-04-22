@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	utils "github.com/ptk-trindade/Distributed-Systems/utils"
 )
 
 
@@ -28,7 +29,7 @@ func Pipe(args []string) {
 func Producer(pipeCh chan int, qty int) {
 	var currentVal int
 	for i:=0; i < qty; i++ {
-		currentVal += utilsRandInt(100) + 1
+		currentVal += utils.RandInt(100) + 1
 		fmt.Println("p:", currentVal)
 		pipeCh <- currentVal // insert into the pipe
 	}
@@ -40,7 +41,7 @@ func Producer(pipeCh chan int, qty int) {
 func Consumer(pipeCh chan int) {
 	currentVal := <- pipeCh // read from the pipe
 	for currentVal != 0 {
-		isPrime := utilsIsPrime(currentVal)
+		isPrime := utils.IsPrime(currentVal)
 
 		if isPrime {
 			fmt.Printf("c: %d is prime\n", currentVal)

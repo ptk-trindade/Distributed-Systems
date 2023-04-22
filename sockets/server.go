@@ -4,9 +4,9 @@ import (
     "fmt"
     "net"
 	"os"
-	"strconv"
 	"encoding/binary"
 	"bytes"
+	utils "github.com/ptk-trindade/Distributed-Systems/utils"
 )
 
 func Server() {
@@ -56,7 +56,7 @@ func handleConnection(conn net.Conn, closeServer chan bool) {
 			return
 		}
 		
-		isPrime := utilsIsPrime(int(valReceived))
+		isPrime := utils.IsPrime(int(valReceived))
 		var response string
 		if isPrime {
 			response = "Is prime    "

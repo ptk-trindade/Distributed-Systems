@@ -3,6 +3,9 @@ package main
 import (
     "fmt"
     "os"
+    signals "github.com/ptk-trindade/Distributed-Systems/signals"
+    pipes "github.com/ptk-trindade/Distributed-Systems/pipes"
+    sockets "github.com/ptk-trindade/Distributed-Systems/sockets"
 )
 
 func main() {
@@ -15,11 +18,11 @@ func main() {
 
     switch program {
     case "signals":
-        signalsSignal(args)
+        signals.Signal(args)
     case "pipes":
-        pipesPipe(args)
+        pipes.Pipe(args)
     case "sockets":
-        socketsSocket(args)
+        sockets.Socket(args)
 
 	default:
 		fmt.Println("Invalid parameter, program must be 'signals', 'pipes' or 'sockets'")

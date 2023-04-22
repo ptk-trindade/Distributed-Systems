@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	utils "github.com/ptk-trindade/Distributed-Systems/utils"
 )
 
 
@@ -29,7 +30,7 @@ func pipesPipe(args []string) {
 func producer(pipeCh chan int, qty int) {
 	var currentVal int
 	for i:=0; i < qty; i++ {
-		currentVal += utilsRandInt(100) + 1
+		currentVal += utils.RandInt(100) + 1
 		fmt.Println("p:", currentVal)
 		pipeCh <- currentVal // insert into the pipe
 	}

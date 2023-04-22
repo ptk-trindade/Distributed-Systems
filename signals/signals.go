@@ -2,10 +2,7 @@ package signals
 
 import (
     "fmt"
-    "strconv"
     "os"
-    "os/signal"
-    "syscall"
 )
 
 // SIGNALS

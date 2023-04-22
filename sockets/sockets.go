@@ -2,11 +2,7 @@ package sockets
 
 import (
     "fmt"
-    "net"
 	"os"
-	"strconv"
-	"encoding/binary"
-	"bytes"
 )
 
 
