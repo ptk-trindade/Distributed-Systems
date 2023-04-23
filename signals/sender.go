@@ -2,8 +2,9 @@ package signals
 
 import (
     "fmt"
-    "strconv"
+    "log"
     "os"
+    "strconv"
     "syscall"
 )
 
@@ -33,5 +34,5 @@ func Send(args []string) {
         os.Exit(1)
     }
 
-    fmt.Printf("Sent signal %d to process with PID %d\n", sigNum, pid)
+    log.Printf("Sent signal %d to process with PID %d\n", sigNum, pid)
 }

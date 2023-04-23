@@ -1,9 +1,10 @@
 package signals
 
 import (
-    "fmt"
-    "os"
 	"os/signal"
+    "fmt"
+    "log"
+    "os"
     "syscall"
     "time"
 )
@@ -20,9 +21,9 @@ func Receive(args []string) {
     mode, args := args[0], args[1:]
     
     pid := syscall.Getpid()
-    fmt.Printf("PID: %d, waiting for signal...\n", pid)
+    log.Printf("PID: %d, waiting for signal...\n", pid)
     
-    sigCh := make(chan os.Signal, 1) // synchronous channel
+    sigCh := make(chan os.Signal, 1)
 
     signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGPWR)
     
@@ -40,23 +41,23 @@ func Receive(args []string) {
 
 
 func ReceiveBlocking(sigCh chan os.Signal) {
-    fmt.Println("Blocking...")
+    log.Println("Blocking...")
     
     var signalReceived os.Signal
     for signalReceived != syscall.SIGINT {
         signalReceived = <-sigCh
 
         if signalReceived == syscall.SIGINT { // signal 2 (0x2) - Interrupt from keyboard (Ctrl+C)
-            fmt.Println("Received SIGINT")
+            log.Println("Received SIGINT")
 
         } else if signalReceived == syscall.SIGTERM { // signal 15 (0xf) - Termination signal
-            fmt.Println("Received SIGTERM")
+            log.Println("Received SIGTERM")
 
         } else if signalReceived == syscall.SIGPWR { // signal 30 (0x1e) - System is shutting down
-            fmt.Println("Received SIGPWR")
+            log.Println("Received SIGPWR")
             
         } else {
-            fmt.Println("Received unknown signal:", signalReceived)
+            log.Println("Received unknown signal:", signalReceived)
             
         }
     }
@@ -72,17 +73,17 @@ func ReceiveBusyWait(sigCh chan os.Signal) {
         select {
             case signalReceived := <- sigCh:
                 if signalReceived == syscall.SIGINT { // signal 2 (0x2) - Interrupt from keyboard (Ctrl+C)
-                    fmt.Println("Received SIGINT")
+                    log.Println("\nReceived SIGINT")
                     keepGoing = false
 
                 } else if signalReceived == syscall.SIGTERM { // signal 15 (0xf) - Termination signal
-                    fmt.Println("Received SIGTERM")
+                    log.Println("\nReceived SIGTERM")
 
                 } else if signalReceived == syscall.SIGPWR { // signal 30 (0x1e) - System is shutting down
-                    fmt.Println("Received SIGPWR")
+                    log.Println("\nReceived SIGPWR")
                     
                 } else {
-                    fmt.Println("Received unknown signal:", signalReceived)
+                    log.Println("Received unknown signal:", signalReceived)
 
                 }
 
