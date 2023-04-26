@@ -20,7 +20,6 @@ func Server() {
 
     fmt.Println("Server started, listening on port 8080")
 
-	closeServer := make(chan bool, 1)
     for {
         // wait for a connection
         conn, err := listener.Accept()
@@ -30,14 +29,14 @@ func Server() {
             continue
         }
 
-        go handleConnection(conn, closeServer)
+        go handleConnection(conn)
     }
 }
 
 
 // ----- LOCAL FUNCTIONS ------
 
-func handleConnection(conn net.Conn, closeServer chan bool) {
+func handleConnection(conn net.Conn) {
     defer conn.Close()
 	defer fmt.Println("Closing connection...")
 	
